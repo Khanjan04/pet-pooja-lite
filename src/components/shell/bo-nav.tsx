@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import {
   BarChart3, Boxes, ChefHat, ClipboardList, CreditCard, FileClock, LayoutDashboard, Menu as MenuIcon,
-  MonitorSmartphone, Percent, Plug, Printer, Settings, Store, Tags, Users, UtensilsCrossed, X, Heart, Grid3x3,
+  MonitorSmartphone, Percent, UserRound, Plug, Printer, Settings, Store, Tags, Users, UtensilsCrossed, X, Heart, Grid3x3,
 } from "lucide-react";
 import { cn } from "@/lib/cn";
 
@@ -36,7 +36,7 @@ const GROUPS: { title: string; items: NavItem[] }[] = [
       { href: "/settings/taxes", label: "Taxes & charges", icon: <ClipboardList aria-hidden className={ic} /> },
       { href: "/staff", label: "Staff & permissions", icon: <Users aria-hidden className={ic} /> },
       { href: "/settings", label: "Outlet settings", icon: <Settings aria-hidden className={ic} /> },
-      { href: "/outlets", label: "Outlets", icon: <Store aria-hidden className={ic} />, soon: true },
+      { href: "/outlets", label: "Outlets & tills", icon: <Store aria-hidden className={ic} /> },
     ],
   },
   {
@@ -52,6 +52,7 @@ const GROUPS: { title: string; items: NavItem[] }[] = [
     items: [
       { href: "/integrations", label: "Integrations", icon: <Plug aria-hidden className={ic} />, soon: true },
       { href: "/billing", label: "Plan & billing", icon: <CreditCard aria-hidden className={ic} /> },
+      { href: "/account", label: "Your account", icon: <UserRound aria-hidden className={ic} /> },
     ],
   },
 ];

@@ -1,13 +1,20 @@
 "use client";
 
 import { useEffect, useState, useSyncExternalStore } from "react";
-import { getDb, subscribe, type Db } from "./store";
+import { store, type Db, type Scope, type Status } from "./store";
 
 const serverSnapshot = () => null;
+const serverStatus = () => "loading" as Status;
 
-/** The whole database, or null during server render / first paint (show a skeleton). */
-export function useDb(): Db | null {
-  return useSyncExternalStore(subscribe, getDb, serverSnapshot);
+/** The outlet's data, or null while loading (show a skeleton). "member" = back-office view. */
+export function useDb(scope: Scope = "device"): Db | null {
+  const s = store(scope);
+  return useSyncExternalStore(s.subscribe, s.getDb, serverSnapshot);
+}
+
+export function useDbStatus(scope: Scope = "device"): Status {
+  const s = store(scope);
+  return useSyncExternalStore(s.subscribe, s.getStatus, serverStatus);
 }
 
 /** Ticks every `ms` so timers on screen stay current. */

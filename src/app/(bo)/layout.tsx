@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { BoGuard } from "@/components/shell/bo-guard";
 import { BoNav } from "@/components/shell/bo-nav";
 
 export default function BackOfficeLayout({ children }: { children: React.ReactNode }) {
@@ -8,7 +9,7 @@ export default function BackOfficeLayout({ children }: { children: React.ReactNo
         <BoNav />
       </Suspense>
       <main id="main" className="min-w-0 flex-1">
-        {children}
+        <BoGuard>{children}</BoGuard>
       </main>
     </div>
   );

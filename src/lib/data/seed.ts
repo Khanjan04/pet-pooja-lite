@@ -1,4 +1,5 @@
-// Demo data so every screen has something real to show. Names and dishes are generic.
+// The sample menu, floor and roles a new restaurant can start with (server/orgs.ts).
+// Names and dishes are generic.
 
 import type { AddonGroup, Area, Category, Item, Outlet, Role, Staff, Station, Table, Tax } from "@/lib/domain/types";
 
@@ -160,5 +161,3 @@ export const staff: Staff[] = [
   { id: "staff-3", name: "Imran (Captain)", roleId: "role-captain" },
 ];
 
-// FAKE DATA LAYER ONLY. The real system keeps argon2 hashes in staff_secrets, server-side.
-export const demoPins: Record<string, string> = { "staff-1": "1111", "staff-2": "2222", "staff-3": "3333" };

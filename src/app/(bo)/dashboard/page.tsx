@@ -11,7 +11,7 @@ import { formatPaise } from "@/lib/money";
 const METHOD: Record<PayMethod, string> = { cash: "Cash", card: "Card", upi: "UPI", wallet: "Wallet", due: "Pay later" };
 
 export default function DashboardPage() {
-  const db = useDb();
+  const db = useDb("member");
   const today = db ? businessDate(new Date(), db.outlet.timezone, db.outlet.dayStartsAt) : "";
   const settled = db ? db.bills.filter((b) => b.status === "settled" && b.businessDate === today) : [];
   const sales = settled.reduce((a, b) => a + b.totalPaise, 0);

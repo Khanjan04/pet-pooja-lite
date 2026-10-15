@@ -7,13 +7,14 @@ import { Numpad, PinDots } from "@/components/ui/pos";
 import { Skeleton } from "@/components/ui/feedback";
 import { Button } from "@/components/ui/button";
 import { DomainError, loginWithPin } from "@/lib/data/api";
-import { useDb } from "@/lib/data/hooks";
+import { useDb, useDbStatus } from "@/lib/data/hooks";
 import { cn } from "@/lib/cn";
 
 const PIN_LENGTH = 4;
 
 export default function PinLoginPage() {
   const db = useDb();
+  const status = useDbStatus();
   const router = useRouter();
   const [staffId, setStaffId] = useState<string | null>(null);
   const [pin, setPin] = useState("");
@@ -44,6 +45,11 @@ export default function PinLoginPage() {
     },
     [submit],
   );
+
+  useEffect(() => {
+    if (status === "device_required") router.replace("/pos/pair");
+    else if (db?.session) router.replace("/pos");
+  }, [status, db, router]);
 
   // Physical keyboard: digits and Backspace.
   useEffect(() => {
@@ -93,7 +99,6 @@ export default function PinLoginPage() {
           <p className="text-lg">Enter your PIN</p>
           <PinDots length={PIN_LENGTH} filled={pin.length} error={error} />
           <Numpad mode="pin" onKey={press} />
-          <p className="text-center text-xs text-text-muted">Demo PINs: 1111 manager · 2222 cashier · 3333 captain</p>
         </section>
       )}
       {!staffId && db && (

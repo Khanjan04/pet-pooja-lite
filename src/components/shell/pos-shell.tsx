@@ -5,9 +5,9 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { SyncBanner } from "@/components/ui/feedback";
+import { Alert, SyncBanner } from "@/components/ui/feedback";
 import { logout } from "@/lib/data/api";
-import { currentStaff, useDb } from "@/lib/data/hooks";
+import { currentStaff, useDb, useDbStatus } from "@/lib/data/hooks";
 import { cn } from "@/lib/cn";
 
 const TABS = [
@@ -35,15 +35,25 @@ function useOnline() {
 /** POS header, tabs and the PIN-session guard. */
 export function PosShell({ children }: { children: React.ReactNode }) {
   const db = useDb();
+  const status = useDbStatus();
   const path = usePathname();
   const router = useRouter();
   const online = useOnline();
   const staff = db ? currentStaff(db) : null;
 
   useEffect(() => {
-    if (db && !staff) router.replace("/pos/login");
-  }, [db, staff, router]);
+    if (status === "device_required") router.replace("/pos/pair");
+    else if (db && !staff) router.replace("/pos/login");
+  }, [status, db, staff, router]);
 
+  if (status === "error" && !db)
+    return (
+      <div className="p-6">
+        <Alert kind="danger" title="Can’t load the till" action={<Button size="sm" variant="secondary" onClick={() => location.reload()}>Retry</Button>}>
+          Check the internet connection, then retry.
+        </Alert>
+      </div>
+    );
   if (!db || !staff) return <div aria-busy className="flex-1" />;
 
   return (

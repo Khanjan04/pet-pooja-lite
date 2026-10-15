@@ -137,7 +137,7 @@ export default function DesignPage() {
             <Field label="Item name" required placeholder="e.g. Masala dosa" />
             <Field label="Price" prefix="₹" inputMode="decimal" defaultValue="240.00" hint="Before tax" />
             <Field label="Customer phone" prefix="+91" inputMode="tel" defaultValue="98765" error="Enter a 10-digit mobile number" />
-            <Field label="GSTIN" defaultValue="24AAACP1234Q1Z5" className="uppercase" />
+            <Field label="GSTIN" defaultValue="24AAACP1234Q1Z5" autoCapitalize="characters" />
             <Field label="Shortcode" disabled defaultValue="PT" />
             <div className="flex items-end">
               <Toggle label="In stock" checked={inStock} onCheckedChange={setInStock} />
