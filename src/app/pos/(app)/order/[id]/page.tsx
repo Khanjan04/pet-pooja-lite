@@ -33,6 +33,8 @@ export default function OrderPage() {
   const [settling, setSettling] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<React.ReactNode>(null);
+  const [busy, setBusy] = useState(false);
+  const inFlight = useRef(false);
 
   // "/" jumps to search, as on most tills.
   useEffect(() => {
@@ -95,7 +97,15 @@ export default function OrderPage() {
   const hasActive = lines.some((l) => l.status === "active");
   const title = order.type === "dine_in" ? `Table ${tables.map((t) => t.name).join(" + ")}` : `${TYPE_LABEL[order.type]} #${order.orderNo}`;
 
-  async function run(fn: () => Promise<unknown>, ok?: React.ReactNode) {
+  async function run(fn: () => Promise<unknown>, ok?: React.ReactNode, opts: { exclusive?: boolean } = { exclusive: true }) {
+    // Order-level actions run one at a time: a double tap must not send twice (BUG-002).
+    // Adding dishes and changing quantities stay instant, so quick taps are never dropped.
+    const exclusive = opts.exclusive !== false;
+    if (exclusive && inFlight.current) return;
+    if (exclusive) {
+      inFlight.current = true;
+      setBusy(true);
+    }
     setError(null);
     setNotice(null);
     try {
@@ -103,7 +113,13 @@ export default function OrderPage() {
       if (ok !== undefined) setNotice(ok);
     } catch (e) {
       setNotice(null);
+      if (e instanceof api.DomainError && e.code === "pin_required") return router.replace("/pos/login");
       setError(e instanceof api.DomainError ? e.message : "Something went wrong. Try again.");
+    } finally {
+      if (exclusive) {
+        inFlight.current = false;
+        setBusy(false);
+      }
     }
   }
 
@@ -111,7 +127,7 @@ export default function OrderPage() {
     if (!editable) return setError("This order is billed. Reopen the bill to add items.");
     const groups = db!.addonGroups.filter((g) => item.addonGroupIds.includes(g.id));
     if (item.variations.length || groups.length) setOptionsFor(item);
-    else void run(() => api.addItem(id, { itemId: item.id }));
+    else void run(() => api.addItem(id, { itemId: item.id }), undefined, { exclusive: false });
   }
 
   const stationName = (sid: string | null) => db.stations.find((s) => s.id === sid)?.name ?? "Kitchen";
@@ -232,7 +248,7 @@ export default function OrderPage() {
                     linePaise={l.unitPricePaise * l.qty}
                     state={state}
                     voidReason={l.voidReason ?? undefined}
-                    onQty={editable ? (n) => void run(() => api.setQty(l.id, n)) : undefined}
+                    onQty={editable ? (n) => void run(() => api.setQty(l.id, n), undefined, { exclusive: false }) : undefined}
                     trailing={
                       editable && l.status === "active" && l.sentQty > 0 && can("kot.cancel") ? (
                         <IconButton label={`Void ${l.name}`} size="sm" onClick={() => setVoiding(l)}>
@@ -312,6 +328,7 @@ export default function OrderPage() {
           ) : unsent ? (
             <Button
               size="lg"
+              loading={busy}
               icon={<Send aria-hidden className="size-5" />}
               onClick={() =>
                 run(async () => {
@@ -334,6 +351,7 @@ export default function OrderPage() {
           ) : (
             <Button
               size="lg"
+              loading={busy}
               icon={<Receipt aria-hidden className="size-5" />}
               disabled={!hasActive}
               onClick={() =>
