@@ -9,7 +9,10 @@
     "lint": "eslint",
     "design:check": "node scripts/design-check.mjs ../replica/design/screens",
     "tokens": "python3 ../replica/design/build_tokens.py --out ../replica/design --out src/styles",
-    "test": "vitest run"
+    "test": "vitest run",
+    "db:migrate": "tsx scripts/migrate.mts",
+    "test:server": "vitest run -c vitest.server.config.mts",
+    "db:seed": "tsx --conditions=react-server --env-file=.env.local scripts/seed.mts"
   },
   "dependencies": {
     "@fontsource-variable/inter": "^5.3.0",
@@ -18,21 +21,29 @@
     "@radix-ui/react-radio-group": "^1.5.1",
     "@radix-ui/react-switch": "^1.4.1",
     "@radix-ui/react-tabs": "^1.2.1",
+    "better-auth": "^1.7.10",
     "lucide-react": "^1.57.0",
     "next": "16.4.1",
+    "pg": "^8.23.1",
+    "razorpay": "^2.9.8",
     "react": "19.3.0",
-    "react-dom": "19.3.0"
+    "react-dom": "19.3.0",
+    "resend": "^6.33.0",
+    "server-only": "^0.0.1",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.14.0",
     "@tailwindcss/turbopack": "^4",
     "@types/node": "^20",
+    "@types/pg": "^8.23.1",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.4.1",
     "playwright": "^1.56.1",
     "tailwindcss": "^4",
+    "tsx": "^4.23.15",
     "typescript": "^5",
     "vitest": "^3.2.7"
   }
