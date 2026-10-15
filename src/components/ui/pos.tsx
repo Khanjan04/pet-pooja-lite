@@ -170,6 +170,7 @@ export function CartLine({
   state = "editing",
   voidReason,
   onQty,
+  trailing,
 }: {
   name: string;
   detail?: string;
@@ -179,6 +180,7 @@ export function CartLine({
   state?: CartLineState;
   voidReason?: string;
   onQty?: (q: number) => void;
+  trailing?: ReactNode;
 }) {
   return (
     <li className="flex items-start gap-3 border-b border-border py-3">
@@ -216,6 +218,7 @@ export function CartLine({
       <span className={cn("num text-sm font-semibold", state === "void" || state === "nc" ? "text-text-muted line-through" : "text-text")}>
         {formatPaise(linePaise)}
       </span>
+      {trailing}
     </li>
   );
 }
