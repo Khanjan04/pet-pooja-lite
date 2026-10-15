@@ -1,0 +1,115 @@
+feature,area,priority,original,clone,notes
+Owner sign up with phone OTP or email,onboarding,must,yes,partial,"S01; clone: email + password with verification, reset, Google optional; phone OTP needs SMS provider + DLT"
+Onboarding wizard: outlet + GSTIN + taxes + order types,onboarding,must,yes,partial,"S02; original is sales-led setup - self-serve onboarding is a gap to beat; clone: one-screen setup: outlet, state, GST scheme + GSTIN, owner PIN, sample menu; order types use defaults"
+Multi-tenant orgs with isolated data,platform,must,n/a,yes,"SaaS requirement; clone: Postgres RLS on 62 tables, tested with a second restaurant"
+Staff PIN login on shared terminal,staff,must,yes,yes,"S17; clone: S17; scrypt-hashed PINs, device-bound, lockout after 5 tries, 12h sessions"
+Roles with per-right toggles (cancel KOT / discount / modify after settlement / reprint / reports),staff,must,yes,partial,S12; src 22; clone: rights enforced server-side on every command (tested); S12 editor not built
+Categories and parent categories,menu,must,yes,partial,S05; API parentcategories; clone: categories from seed data; no parent categories or editor (S05)
+Items with price / shortcode / veg marker / tax / station,menu,must,yes,partial,S06; clone: all fields used on the POS; editor S06 not built
+Item variations (size/portion) with own price,menu,must,yes,partial,S06-S07; clone: ordered and priced on the POS; no editor
+Add-on groups with min/max selection,menu,must,yes,partial,S07; clone: min/max enforced in the options dialog and the command; no editor (S07)
+Item on/off (in stock) from POS and back office,menu,must,yes,partial,S05/S24; API update_item_stock; clone: sold-out items shown and blocked; no toggle UI yet
+GST taxes: CGST+SGST / IGST / inclusive or exclusive,taxes,must,yes,partial,"S08; clone: engine does CGST+SGST, exclusive and inclusive (unit-tested); no IGST choice or S08 UI"
+Service / packaging / delivery charges,taxes,must,yes,no,S08; API packaging_charge deliverycharge
+Discounts: percent or flat at item / category / bill level,discounts,must,yes,no,S09
+Areas and tables setup,tables,must,yes,partial,S10; clone: seeded areas and tables; S10 editor not built
+Table view with live table states and timers,pos,must,yes,yes,"S18; clone: S18: free / seated / in kitchen / bill printed, timers, area filter"
+Order types: dine-in / takeaway / delivery,pos,must,yes,partial,S19; clone: all three open orders; delivery has no customer address yet (needs S20)
+Billing screen: item grid + search + shortcode entry,pos,must,yes,yes,"S19; clone: S19; exact shortcode + Enter adds, '/' focuses search"
+Cart with qty / notes / variation / add-ons,pos,must,yes,yes,S19; clone: S19 + options dialog
+Station-wise KOT generation with running serial,kot,must,yes,yes,"S25; src 16; clone: one KOT per station, serial per business date"
+Void / cancel KOT with reason and right check,kot,must,yes,yes,"S19/S25; clone: void KOT ticket, reason required, audited and flagged"
+Add items to a running table (next KOT),kot,must,yes,yes,F02; clone: only new quantity is sent
+Kitchen stations mapped to categories/items,kot,must,yes,partial,S11; clone: item or category station used for routing; S11 editor not built
+Thermal printing of KOTs and bills (station printers),printing,must,yes,partial,hard part: needs local print bridge; clone: S25 browser print at 80 mm; print agent not built
+GST-compliant bill print (GSTIN / tax breakup / bill series),printing,must,yes,partial,"S25/S43; clone: GSTIN, FSSAI, tax per rate with taxable value, series/FY/number, duplicate marker; no customer GSTIN (B2B) yet"
+Settle with cash / card / UPI,payments,must,yes,yes,S21; clone: S21 with change calculation and references
+Multiple payment modes on one bill,payments,must,yes,yes,"S21; src 14; clone: split tender, one payment at a time"
+Split bill: equal / item-wise / custom with GST per share,payments,must,yes,no,S22; src 14
+Merge / shift / transfer tables,tables,must,yes,no,F08
+Running orders list with reprint and cancel,pos,must,yes,no,S23
+Customer capture by phone on the bill,crm,must,yes,no,S20
+Day end with biller-wise cash summary and cash count,day end,must,yes,no,S15
+Business date handling (late bills after midnight),day end,must,yes,yes,"F15; clone: 05:00 cut-off, unit-tested"
+Audit log of KOT cancels / bill edits / reprints / table shifts,audit,must,yes,partial,"S16; clone: voids, reprints, reopen and cancels logged; S16 screen not built; no table shifts yet"
+Owner dashboard: today sales / orders / payment split / top items,reports,must,yes,yes,S03; clone: S03; no outlet comparison or week-on-week deltas yet
+Sales reports: day-wise / item-wise / category / order type,reports,must,yes,no,S14
+Tax report (GST summary),reports,must,yes,no,S14
+Payment mode and discount reports,reports,must,yes,no,S14
+Cancelled KOT / modified bill reports,reports,must,yes,no,S14/S16
+Report export CSV / Excel / PDF,reports,must,yes,no,S14
+Outlet settings: profile / FSSAI / bill header-footer / numbering,settings,must,yes,no,S43
+Realtime sync between POS terminals,platform,must,yes,yes,hard part; clone: SSE from Postgres LISTEN/NOTIFY; tested across two tabs
+Offline billing with queued sync,platform,must,yes,no,hard part; original is offline-first on desktop builds; clone: real backend needs the network; commands retry safely with idempotency keys but no offline queue yet
+SaaS subscription: trial / plans / per-outlet billing,billing,must,n/a,partial,"S42; use Stripe or Razorpay; clone: 14-day trial, Razorpay subscriptions + webhooks (tested with signed payloads); checkout never run against Razorpay (no keys, API unreachable)"
+Multi-terminal billing in one outlet,pos,must,yes,yes,"src 1; clone: pair tills by code; each gets its own bill series (T1, T2), tested in parallel"
+Kitchen display: order cards by station / tap ready,kds,should,yes,no,S26
+KDS ticket age timer and late highlighting,kds,should,unknown,no,S26; not confirmed in original - a chance to beat it
+Void KOT shown on KDS,kds,should,yes,no,F06
+Captain view: tables / order / send KOT (mobile web),captain,should,yes,no,S27
+Captain offline queue,captain,should,yes,no,src 16 (up to 5 days)
+Captain performance report,reports,should,yes,no,src 22
+QR code per table generation,qr,should,yes,no,S10
+Guest QR menu with cart and submit,qr,should,yes,no,S28-S29
+QR order validation code checked by staff,qr,should,yes,no,src 18
+QR later rounds append to running bill,qr,should,yes,no,src 18
+Online order inbox with sound alert / accept / reject / ready,online,should,yes,no,S24
+Auto-accept online orders,online,should,yes,no,src 6/11
+Store online on/off with turn-on time,online,should,yes,no,API update_store_status
+Channel abstraction for online sources,online,should,yes,no,Channel entity
+Own online ordering website per outlet,online,should,yes,no,src 11
+Price per order type / channel,menu,should,yes,no,S06
+Item / category availability time windows,menu,should,yes,no,src 7
+Combo items,menu,should,yes,no,API is_combo combo_items
+Menu import / export via Excel,menu,should,unknown,no,S05; G2 says setup is hard - import is a fix
+Hold order / park bill,pos,should,unknown,no,not confirmed
+Part payment and due (credit) tracking,payments,should,unknown,no,not confirmed
+NC / complimentary bill with reason,payments,should,unknown,no,common in Indian POS; not confirmed
+Coupon codes,discounts,should,yes,no,src 1
+Manager override PIN for a single action,staff,should,unknown,no,F18
+Outlet-scoped user access,staff,should,yes,partial,src 23; clone: members and staff carry outlet scopes enforced by RLS; no UI to edit them
+Raw materials with units and conversions,inventory,should,yes,no,S30
+Recipes per item / variation,inventory,should,yes,no,S31
+Auto stock deduction on sale via recipe,inventory,should,yes,no,F12
+Purchase entry (GRN) increases stock,inventory,should,yes,no,S32
+Suppliers and supplier dues,inventory,should,yes,no,S33
+Purchase orders raise / receive / partial,inventory,should,yes,no,S33
+Physical stock count and variance,inventory,should,yes,no,S35
+Wastage entry with reason,inventory,should,yes,no,S35
+Low stock alerts with min level,inventory,should,yes,no,S36
+Consumption / closing stock / food cost reports,inventory,should,yes,no,S36
+Customer list / profile / visit and spend history,crm,should,yes,no,S37
+Customer segments (new / regular / lapsed),crm,should,yes,no,src 24
+Day-end summary sent to owner by email/SMS/WhatsApp,day end,should,yes,no,F15
+Multi-outlet dashboard and outlet switcher,multi-outlet,should,yes,no,S03/S04
+Multi-stage (semi-finished) recipes,inventory,could,yes,no,src 9
+Expiry tracking and alerts,inventory,could,yes,no,src 6
+Central kitchen: indents / dispatch / receive,multi-outlet,could,yes,no,S34
+Stock transfer between outlets,multi-outlet,could,yes,no,S34
+Supplier returns of damaged stock,inventory,could,yes,no,src 9
+Master menu pushed to many outlets,multi-outlet,could,yes,no,F11
+Consolidated multi-outlet reports,multi-outlet,could,yes,no,S14
+Loyalty points earn / redeem with OTP,crm,could,yes,no,S38; src 25
+Wallet recharge with bonus offers,crm,could,yes,no,src 25
+Points expiry rules,crm,could,yes,no,src 25
+SMS / WhatsApp campaigns to segments,crm,could,yes,no,S39; needs DLT-registered provider
+Birthday / anniversary automations,crm,could,yes,no,src 26
+Feedback link / QR after bill,crm,could,yes,no,S40
+Reservations and waitlist,tables,could,unknown,no,S44; medium confidence
+Self-order kiosk,kiosk,could,yes,no,S45
+Owner mobile dashboard view,reports,could,yes,no,S46
+Scheduled report emails,reports,could,unknown,no,S14
+Accounting export (Tally-compatible),integrations,could,yes,no,src 28; export file not the partner integration
+Payment gateway for online orders (UPI / cards),integrations,could,yes,no,Razorpay/Cashfree/Stripe
+Tips,payments,could,unknown,no,S21
+Delivery customer addresses and delivery charge rules,pos,could,yes,no,F04
+Zomato direct integration,integrations,skip,yes,skip,partner onboarding with Zomato required; use middleware or apply later
+Swiggy direct integration,integrations,skip,yes,skip,partner onboarding with Swiggy required
+Marketplace of 200+ partner apps,integrations,skip,yes,skip,their partner network
+GST e-invoice (IRN) generation,compliance,skip,yes,skip,needs licensed GSP provider; add as integration later
+Integrated EDC card machines,hardware,skip,yes,skip,hardware/bank deals
+Native Android and Windows POS apps,platform,skip,yes,skip,web PWA instead
+Petpooja Invoice retail billing,products,skip,yes,skip,separate product
+Payroll and task management add-ons,products,skip,yes,skip,separate products
+Petpooja AI tools,ai,skip,yes,skip,details unknown; revisit after /replica-entrepreneur
+Delivery fleet integrations,integrations,skip,yes,skip,partner deals

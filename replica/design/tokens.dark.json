@@ -1,0 +1,209 @@
+{
+ "_about": "GENERATED from tokens.json color_dark, for contrast.py only.",
+ "color": {
+  "bg": "#0f1115",
+  "surface": "#171a20",
+  "surface-sunken": "#0a0c0f",
+  "border": "#2a2f38",
+  "border-input": "#737c89",
+  "text": "#eef0f3",
+  "text-muted": "#a4acb8",
+  "accent": "#8aa4ff",
+  "accent-hover": "#a3b7ff",
+  "on-accent": "#0b1020",
+  "accent-soft": "#1c2540",
+  "on-accent-soft": "#b9c8ff",
+  "danger": "#ff7a7a",
+  "on-danger": "#1a0505",
+  "danger-soft": "#3a1717",
+  "on-danger-soft": "#ffb3b3",
+  "success": "#4fcb8b",
+  "on-success": "#04170c",
+  "success-soft": "#12301f",
+  "on-success-soft": "#9ce6bd",
+  "warning": "#f5b84a",
+  "warning-soft": "#3a2a0d",
+  "on-warning-soft": "#ffd88f",
+  "focus": "#8aa4ff",
+  "table-blank": "#171a20",
+  "on-table-blank": "#eef0f3",
+  "table-running": "#1c2540",
+  "on-table-running": "#b9c8ff",
+  "table-kot": "#3a2a0d",
+  "on-table-kot": "#ffd88f",
+  "table-billed": "#2a1d44",
+  "on-table-billed": "#d6c2ff",
+  "table-paid": "#12301f",
+  "on-table-paid": "#9ce6bd",
+  "table-reserved": "#22262e",
+  "on-table-reserved": "#c3c9d2",
+  "veg": "#4fcb8b",
+  "non-veg": "#ff8a6b",
+  "egg": "#f5b84a"
+ },
+ "pairs": [
+  [
+   "text",
+   "bg"
+  ],
+  [
+   "text",
+   "surface"
+  ],
+  [
+   "text",
+   "surface-sunken"
+  ],
+  [
+   "text-muted",
+   "bg"
+  ],
+  [
+   "text-muted",
+   "surface"
+  ],
+  [
+   "text-muted",
+   "surface-sunken"
+  ],
+  [
+   "on-accent",
+   "accent"
+  ],
+  [
+   "on-accent",
+   "accent-hover"
+  ],
+  [
+   "accent",
+   "bg"
+  ],
+  [
+   "accent",
+   "surface"
+  ],
+  [
+   "on-accent-soft",
+   "accent-soft"
+  ],
+  [
+   "on-danger",
+   "danger"
+  ],
+  [
+   "danger",
+   "bg"
+  ],
+  [
+   "danger",
+   "surface"
+  ],
+  [
+   "on-danger-soft",
+   "danger-soft"
+  ],
+  [
+   "on-success",
+   "success"
+  ],
+  [
+   "success",
+   "bg"
+  ],
+  [
+   "on-success-soft",
+   "success-soft"
+  ],
+  [
+   "warning",
+   "bg"
+  ],
+  [
+   "warning",
+   "surface"
+  ],
+  [
+   "on-warning-soft",
+   "warning-soft"
+  ],
+  [
+   "on-table-blank",
+   "table-blank"
+  ],
+  [
+   "on-table-running",
+   "table-running"
+  ],
+  [
+   "on-table-kot",
+   "table-kot"
+  ],
+  [
+   "on-table-billed",
+   "table-billed"
+  ],
+  [
+   "on-table-paid",
+   "table-paid"
+  ],
+  [
+   "on-table-reserved",
+   "table-reserved"
+  ],
+  [
+   "border-input",
+   "bg",
+   "ui"
+  ],
+  [
+   "border-input",
+   "surface",
+   "ui"
+  ],
+  [
+   "focus",
+   "bg",
+   "ui"
+  ],
+  [
+   "focus",
+   "surface",
+   "ui"
+  ],
+  [
+   "focus",
+   "surface-sunken",
+   "ui"
+  ],
+  [
+   "veg",
+   "bg",
+   "ui"
+  ],
+  [
+   "non-veg",
+   "bg",
+   "ui"
+  ],
+  [
+   "egg",
+   "bg",
+   "ui"
+  ],
+  [
+   "veg",
+   "surface",
+   "ui"
+  ],
+  [
+   "non-veg",
+   "surface",
+   "ui"
+  ],
+  [
+   "egg",
+   "surface",
+   "ui"
+  ]
+ ]
+}

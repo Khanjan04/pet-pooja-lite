@@ -1,0 +1,84 @@
+# Contrast report (2026-10-15) — WCAG 2.2
+## Light (tokens.json)
+  AAA   17.96:1  text                     on bg                   
+  AAA   16.61:1  text                     on surface              
+  AAA   15.46:1  text                     on surface-sunken       
+  AA     6.15:1  text-muted               on bg                   
+  AA     5.69:1  text-muted               on surface              
+  AA     5.29:1  text-muted               on surface-sunken       
+  AA     6.23:1  on-accent                on accent               
+  AAA    8.01:1  on-accent                on accent-hover         
+  AA     6.23:1  accent                   on bg                   
+  AA     5.76:1  accent                   on surface              
+  AAA    8.23:1  on-accent-soft           on accent-soft          
+  AA     5.66:1  on-danger                on danger               
+  AA     5.66:1  danger                   on bg                   
+  AA     5.24:1  danger                   on surface              
+  AAA    7.05:1  on-danger-soft           on danger-soft          
+  AA     5.87:1  on-success               on success              
+  AA     5.87:1  success                  on bg                   
+  AAA    7.08:1  on-success-soft          on success-soft         
+  AA     5.22:1  warning                  on bg                   
+  AA     4.83:1  warning                  on surface              
+  AAA    7.28:1  on-warning-soft          on warning-soft         
+  AAA   17.96:1  on-table-blank           on table-blank          
+  AAA    8.06:1  on-table-running         on table-running        
+  AAA    7.15:1  on-table-kot             on table-kot            
+  AAA    7.95:1  on-table-billed          on table-billed         
+  AAA    7.08:1  on-table-paid            on table-paid           
+  AAA    7.46:1  on-table-reserved        on table-reserved       
+  PASS   3.31:1  border-input             on bg                   ui
+  PASS   3.06:1  border-input             on surface              ui
+  PASS   6.23:1  focus                    on bg                   ui
+  PASS   5.76:1  focus                    on surface              ui
+  PASS   5.36:1  focus                    on surface-sunken       ui
+  PASS   4.42:1  veg                      on bg                   ui
+  PASS   6.98:1  non-veg                  on bg                   ui
+  PASS   4.20:1  egg                      on bg                   ui
+  PASS   4.08:1  veg                      on surface              ui
+  PASS   6.45:1  non-veg                  on surface              ui
+  PASS   3.89:1  egg                      on surface              ui
+
+  38 pairs, 0 failing AA
+
+## Dark (tokens.dark.json)
+  AAA   16.55:1  text                     on bg                   
+  AAA   15.26:1  text                     on surface              
+  AAA   17.15:1  text                     on surface-sunken       
+  AAA    8.25:1  text-muted               on bg                   
+  AAA    7.61:1  text-muted               on surface              
+  AAA    8.55:1  text-muted               on surface-sunken       
+  AAA    7.97:1  on-accent                on accent               
+  AAA    9.71:1  on-accent                on accent-hover         
+  AAA    7.95:1  accent                   on bg                   
+  AAA    7.33:1  accent                   on surface              
+  AAA    9.20:1  on-accent-soft           on accent-soft          
+  AAA    7.79:1  on-danger                on danger               
+  AAA    7.48:1  danger                   on bg                   
+  AA     6.90:1  danger                   on surface              
+  AAA    9.39:1  on-danger-soft           on danger-soft          
+  AAA    9.04:1  on-success               on success              
+  AAA    9.22:1  success                  on bg                   
+  AAA    9.85:1  on-success-soft          on success-soft         
+  AAA   10.65:1  warning                  on bg                   
+  AAA    9.82:1  warning                  on surface              
+  AAA   10.20:1  on-warning-soft          on warning-soft         
+  AAA   15.26:1  on-table-blank           on table-blank          
+  AAA    9.20:1  on-table-running         on table-running        
+  AAA   10.20:1  on-table-kot             on table-kot            
+  AAA    9.59:1  on-table-billed          on table-billed         
+  AAA    9.85:1  on-table-paid            on table-paid           
+  AAA    9.10:1  on-table-reserved        on table-reserved       
+  PASS   4.48:1  border-input             on bg                   ui
+  PASS   4.13:1  border-input             on surface              ui
+  PASS   7.95:1  focus                    on bg                   ui
+  PASS   7.33:1  focus                    on surface              ui
+  PASS   8.24:1  focus                    on surface-sunken       ui
+  PASS   9.22:1  veg                      on bg                   ui
+  PASS   8.19:1  non-veg                  on bg                   ui
+  PASS  10.65:1  egg                      on bg                   ui
+  PASS   8.50:1  veg                      on surface              ui
+  PASS   7.55:1  non-veg                  on surface              ui
+  PASS   9.82:1  egg                      on surface              ui
+
+  38 pairs, 0 failing AA
