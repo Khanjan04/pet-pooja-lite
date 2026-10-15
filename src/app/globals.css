@@ -1,26 +1,39 @@
 @import "tailwindcss";
+@import "../styles/tokens.css";
+@import "../styles/tailwind.theme.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* Only the generated token files define values. This file wires base behaviour. */
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    background: var(--t-color-bg);
+    color: var(--t-color-text);
+    font-family: var(--t-font-sans);
+  }
+  :focus-visible {
+    outline: 2px solid var(--t-color-focus);
+    outline-offset: 2px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@utility num {
+  font-variant-numeric: tabular-nums;
 }
+@utility h-control-sm { height: var(--t-control-sm); }
+@utility h-control-md { height: var(--t-control-md); }
+@utility h-control-lg { height: var(--t-control-lg); }
+@utility min-h-control-lg { min-height: var(--t-control-lg); }
+@utility size-control-sm { width: var(--t-control-sm); height: var(--t-control-sm); }
+@utility size-control-md { width: var(--t-control-md); height: var(--t-control-md); }
+@utility size-control-lg { width: var(--t-control-lg); height: var(--t-control-lg); }
+@utility ease-token { transition-timing-function: var(--t-motion-ease); transition-duration: var(--t-motion-fast); }
