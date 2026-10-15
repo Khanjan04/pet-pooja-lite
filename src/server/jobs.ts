@@ -83,6 +83,15 @@ export async function periodicTasks() {
   await p.query("delete from pairing_codes where expires_at < now() - interval '1 day'");
   await p.query("delete from rate_limits where window_start < now() - interval '1 day'");
   await p.query("delete from jobs where status = 'done' and updated_at < now() - interval '30 days'");
+  // Orders opened and left empty for 2 hours are closed (BUG-003); their tables are freed.
+  await p.query(
+    `with gone as (
+       update orders o set status = 'cancelled', cancel_reason = 'Empty order closed automatically'
+       where o.status = 'open' and o.created_at < now() - interval '2 hours'
+         and not exists (select 1 from order_items oi where oi.order_id = o.id)
+       returning o.id)
+     update order_tables set released_at = now() where order_id in (select id from gone) and released_at is null`,
+  );
   // Trials that ran out without a subscription: back office becomes read-only, tills keep billing.
   await p.query("update organizations set status = 'read_only' where status = 'trial' and trial_ends_at < now()");
   // Past due for more than 7 days: same.

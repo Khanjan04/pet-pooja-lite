@@ -34,7 +34,8 @@ export default function TablesPage() {
   const [busy, setBusy] = useState(false);
 
   const counterOrders = useMemo<Order[]>(
-    () => (db ? db.orders.filter((o) => o.type !== "dine_in" && (o.status === "open" || o.status === "billed")) : []),
+    // Counter orders with nothing on them are abandoned, not running (BUG-003); the cron closes them.
+    () => (db ? db.orders.filter((o) => o.type !== "dine_in" && (o.status === "open" || o.status === "billed") && db.orderItems.some((l) => l.orderId === o.id)) : []),
     [db],
   );
 

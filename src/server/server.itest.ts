@@ -197,6 +197,19 @@ describe("permissions and sessions", () => {
 });
 
 describe("concurrency", () => {
+  it("BUG-001: two simultaneous 'create restaurant' requests make one restaurant", async () => {
+    const email = `race-${Date.now()}@example.test`;
+    const b = new Browser();
+    await b.call(authRoute.POST, "/api/auth/sign-up/email", { body: { name: "Racer", email, password: "correct horse battery" } });
+    const link = new URL(linkIn((await lastEmailTo(email)).text));
+    await b.call(authRoute.GET, link.pathname + link.search);
+    const body = { restaurantName: "Twice", outletName: "Main", stateCode: "24", gstScheme: "unregistered", gstin: "", ownerName: "R", ownerPin: "1111", sampleMenu: false };
+    const [r1, r2] = await Promise.all([b.call(orgsRoute.POST, "/api/v1/orgs", { body }), b.call(orgsRoute.POST, "/api/v1/orgs", { body })]);
+    expect([r1.status, r2.status].sort()).toEqual([201, 409]);
+    const n = await pool().query('select count(*)::int as n from org_members m join "user" u on u.id = m.user_id where u.email = $1', [email]);
+    expect(n.rows[0].n).toBe(1);
+  });
+
   it("two tills seating the same table get the same order; parallel bills get distinct numbers", async () => {
     const { b, outletId } = await newRestaurant();
     const code = (await b.call(pairingCode.POST, "/api/v1/devices/pairing-code", { body: { outletId, kind: "pos", name: "Till 2" } })).data.code;
@@ -278,6 +291,21 @@ describe("payments (Razorpay webhooks) and jobs", () => {
     expect(await status()).toEqual({ org: "past_due", sub: "past_due" });
     // The failed-payment email job was queued for the owner.
     expect((await pool().query("select 1 from jobs where kind = 'billing.payment_failed' and payload->>'orgId' = $1", [orgId])).rowCount).toBe(1);
+  });
+
+  it("BUG-003: cron closes orders left empty for 2 hours and frees their table", async () => {
+    const { b } = await newRestaurant();
+    const s = await snap(b);
+    const empty = (await cmd(b, "openOrder", { type: "dine_in", tableId: s.tables[5].id })).data.result;
+    const used = (await cmd(b, "openOrder", { type: "takeaway" })).data.result;
+    await cmd(b, "addItem", { orderId: used, itemId: s.items[0].id });
+    await pool().query("update orders set created_at = now() - interval '3 hours' where id = any($1::uuid[])", [[empty, used]]);
+    const x = new Browser();
+    await x.call(cron.GET, "/api/cron/tick", { headers: { authorization: "Bearer cron-secret-for-tests-only-123456" } });
+    const st = (await pool().query("select id, status from orders where id = any($1::uuid[])", [[empty, used]])).rows;
+    expect(st.find((r) => r.id === empty).status).toBe("cancelled");
+    expect(st.find((r) => r.id === used).status).toBe("open");
+    expect((await cmd(b, "openOrder", { type: "dine_in", tableId: s.tables[5].id })).data.result).not.toBe(empty);
   });
 
   it("cron needs its secret and runs due jobs with retries", async () => {
