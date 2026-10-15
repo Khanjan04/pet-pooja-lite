@@ -35,7 +35,10 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       ref={ref}
       type={type}
       aria-busy={loading || undefined}
+      // Busy buttons ignore clicks (no double submits) but stay in the tab order for screen readers.
+      aria-disabled={disabled || loading || undefined}
       disabled={disabled}
+      onClickCapture={loading ? (e) => { e.preventDefault(); e.stopPropagation(); } : undefined}
       className={cn(
         "inline-flex select-none items-center justify-center gap-2 rounded-md font-semibold ease-token transition-[background-color,transform,opacity]",
         "active:scale-[.98] disabled:pointer-events-none disabled:opacity-50",

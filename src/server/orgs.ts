@@ -41,6 +41,8 @@ function slugify(s: string) {
 export async function createOrg(userId: string, input: CreateOrgInput) {
   if (input.gstScheme === "regular" && !input.gstin) throw conflict("A GST-registered restaurant needs its GSTIN.");
   return tx(async (c) => {
+    // Serialise per user: two simultaneous requests (double click) must not both pass the check below.
+    await c.query("select pg_advisory_xact_lock(hashtextextended('create-org:' || $1, 0))", [userId]);
     const existing = await one(c, "select 1 from org_members where user_id = $1", [userId]);
     if (existing) throw conflict("You already have a restaurant set up.");
     const org = await one<{ id: string }>(c, "insert into organizations (name) values ($1) returning id", [input.restaurantName]);
