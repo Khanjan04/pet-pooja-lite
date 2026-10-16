@@ -26,6 +26,19 @@ The database host is still your choice: **Supabase or Neon in Mumbai (ap-south-1
 
 Every variable is listed in `app/.env.example`, with no values.
 
+## Supabase setup
+
+1. Create a project in region **Mumbai (ap-south-1)**. Save the database password.
+2. **Connect** button → **Session pooler** → copy the URI. Replace `[YOUR-PASSWORD]`, then add `?sslmode=no-verify`:
+   `postgres://postgres.<ref>:<password>@aws-0-ap-south-1.pooler.supabase.com:5432/postgres?sslmode=no-verify`
+   - Not *Direct connection*: it is IPv6-only and times out on most home and office networks.
+   - Not *Transaction pooler* (port 6543): live updates use `LISTEN`, which needs a session.
+   - URL-encode special characters in the password (`@` → `%40`, `#` → `%23`, `/` → `%2F`).
+   - `no-verify` encrypts but doesn’t check Supabase’s certificate (Supabase signs with its own CA). Fine for development; for production, verify with Supabase’s CA certificate (done in `/replica-deploy`).
+3. `npm run db:migrate`. Migration `0004_supabase_hardening.sql` turns on row-level security for the login tables and removes Supabase’s `anon`/`authenticated` grants, so nothing is readable through Supabase’s Data API.
+4. Optional but recommended: Project Settings → **Data API** → turn it off. The app never uses it.
+5. Free-tier limit: the session pooler allows a limited number of connections. Each open till screen holds one for live updates, so it’s fine for testing, not for a busy restaurant.
+
 ## Run it
 
 ```bash
