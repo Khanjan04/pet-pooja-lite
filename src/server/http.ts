@@ -28,7 +28,7 @@ export function route<A extends unknown[]>(fn: (...args: A) => Promise<Response>
       unstable_rethrow(e); // let Next's own control-flow errors (prerender bail-outs) through
       if (e instanceof HttpError) return json({ error: e.message, code: e.code }, e.status);
       if (e instanceof ZodError) return json({ error: "Some details are missing or invalid.", issues: e.issues.map((i) => i.path.join(".")) }, 400);
-      console.error("unhandled route error", e instanceof Error ? e.message : e);
+      console.error("unhandled route error:", describe(e));
       return json({ error: "Something went wrong on our side. Try again." }, 500);
     }
   };
@@ -51,4 +51,16 @@ export async function body<T>(req: Request, schema: ZodType<T>): Promise<T> {
 /** Client IP as seen by the platform proxy (Vercel sets x-forwarded-for). Used for rate limits only. */
 export function clientIp(req: Request): string {
   return req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || req.headers.get("x-real-ip") || "local";
+}
+
+/** A one-line cause for logs. Connection failures arrive as AggregateErrors with an empty message. */
+export function describe(e: unknown): string {
+  if (e instanceof AggregateError && e.errors.length) return e.errors.map(describe).join(" | ");
+  if (e instanceof Error) {
+    const code = (e as { code?: string }).code;
+    const msg = e.message || e.name;
+    const cause = e.cause ? ` (cause: ${describe(e.cause)})` : "";
+    return `${code ? code + ": " : ""}${msg}${cause}`;
+  }
+  return String(e);
 }

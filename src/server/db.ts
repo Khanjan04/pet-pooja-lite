@@ -12,7 +12,7 @@ const g = globalThis as { __kkPool?: Pool };
 
 export function pool(): Pool {
   if (!g.__kkPool) {
-    g.__kkPool = new Pool({ connectionString: env().DATABASE_URL, max: 10, idleTimeoutMillis: 30_000 });
+    g.__kkPool = new Pool({ connectionString: env().DATABASE_URL, max: 10, idleTimeoutMillis: 30_000, connectionTimeoutMillis: 5_000 });
     g.__kkPool.on("error", (e) => console.error("pg pool error", e.message));
   }
   return g.__kkPool;

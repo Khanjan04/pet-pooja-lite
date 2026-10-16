@@ -31,7 +31,9 @@ export type Env = z.infer<typeof schema>;
 let cached: Env | null = null;
 export function env(): Env {
   if (!cached) {
-    const parsed = schema.safeParse(process.env);
+    // "NAME=" with nothing after it means "not set", not "set to an empty string".
+    const vars = Object.fromEntries(Object.entries(process.env).filter(([, v]) => v !== undefined && v.trim() !== ""));
+    const parsed = schema.safeParse(vars);
     if (!parsed.success) {
       throw new Error("Invalid server environment:\n" + parsed.error.issues.map((i) => `  ${i.path.join(".")}: ${i.message}`).join("\n"));
     }
